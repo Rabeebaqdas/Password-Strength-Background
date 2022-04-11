@@ -1,53 +1,41 @@
 import './App.css';
-import React,{useState,useRef} from 'react';
+import React,{useState,useRef,useEffect} from 'react';
 
 
 function App() {
-  const clickMe = useRef(null)
-const time = useRef(null)
-const [click,setClick] = useState(0)
-const [count,setCount] = useState(0)
-
-  const handleChange = (e) => {
-    if(click == 0) {
-      setClick(new Date().getTime())
-
-    }else {
-      if((new Date().getTime() - click) < 400){
-       createHeart(e)
-        setClick(0)
-      }else{
-        setClick(new Date().getTime())
-      }
-    }
-  }
+  const text = useRef(null)
+  const speedEl = useRef(null)
+  const [count,setCount] = useState(1)
+  const [line] = useState("We Love Programming!");
+  let idx = 1;
   
-  const createHeart = (e) => {
-    const heart = document.createElement('i');
-    heart.classList.add('fas');
-    heart.classList.add('fa-heart');
-
-    const x =e.nativeEvent.clientX;
-    const y = e.nativeEvent.clientY;
-    const leftOffset = e.target.offsetLeft;
-    const topOffset = e.target.offsetTop;
-
-    const xInside = x - leftOffset;
-    const yInside = y - topOffset;
-    
-    heart.style.top = `${yInside}px`;
-    heart.style.left = `${xInside}px`;
-    clickMe.current.appendChild(heart);
-    setCount(count+1);
-    setTimeout(()=>heart.remove(),5000)
+  let speed = 300;
+  useEffect(()=>{
+    const write = () => {
+      text.current.innerText = line.slice(0,idx);
+    idx++;
+    if(idx > line.length) {
+    idx = 1;
+    }
+    setTimeout(write,speed);
+  
   }
+  write()
+
+
+ speedEl.current.addEventListener("input",(e)=>speed = 300 / e.target.value)
+  
+},[idx])
 
   return (
-    <>
-    <h3>Double click on the  image to <i className='fas fa-heart'></i> it</h3>
-    <small>You liked it <span id='times' ref={time}>{count}</span>{count > 1 ? " times" : " time"}</small>
-    <div className="loveMe" ref={clickMe} onClick={(e)=>handleChange(e)}></div>
-</>
+    <div className='main'>
+    <h1  ref={text}></h1>
+    <div className='child'>
+        <label htmlFor="speed">Speed: </label>
+        <input type="number" name="speed" ref={speedEl} onChange={(e)=>setCount(e.target.value)} value={count}  min="1" max="5" step="1" />
+
+    </div>
+</div>
   )
 }
 
