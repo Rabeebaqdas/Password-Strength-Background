@@ -4,71 +4,65 @@ import React,{useRef,useEffect} from 'react';
 
 
 function App() {
-  const counter = useRef(null)
-  const finalMessage = useRef(null)
-  const reply = useRef(null)
+  const img = useRef(null)
+  const leftbtn = useRef(null)
+  const rightbtn = useRef(null)
   
+  
+  let idx = 0;
   
   useEffect(()=>{
-    const nums = document.querySelectorAll('.nums span')
-    
-    function resetDom() {
-      counter.current.classList.remove('hide')
-      finalMessage.current.classList.remove('show')
-
-      nums.forEach((num)=>{
-        num.classList.value = ''
-
-      })
-
-      nums[0].classList.add('in')
+    const image = document.querySelectorAll('#imgs img')
+      console.log(idx)
+    const run = () => {
+      idx++;
+      changeImage()
     }
-    
-    function runAnimation() {
-    nums.forEach((num,idx) => {
-      const nextToLast = nums.length - 1;
-       num.addEventListener('animationend',(e)=>{
-         if(e.animationName == "goIn" && idx !== nextToLast){
-           num.classList.remove('in')
-           num.classList.add('out')
-          
-         }
-         else if(e.animationName == "goOut" && num.nextElementSibling) {
-            num.nextElementSibling.classList.add('in')
-         
-         }else{
-           counter.current.classList.add('hide')
-           finalMessage.current.classList.add('show')
-          
-          
-         }
-       })
-    })
+  
+    const changeImage = () => {
+      if(idx > image.length - 1) {
+    idx = 0;
+  
+  }else if(idx < 0) {
+    idx = image.length - 1;
   }
-  runAnimation()
-  reply.current.addEventListener('click',()=>{
-    resetDom()
-    runAnimation()
+  
+  img.current.style.transform = `translateX(${-idx * 500}px)`
+    }
+  
+  let interval = setInterval(run,2000)
 
+  function reset() {
+    clearInterval(interval)
+    interval = setInterval(run,2000)
+  }
+
+  rightbtn.current.addEventListener('click',()=>{
+    idx++
+    changeImage()
+    reset()
   })
-},[])
-
+  leftbtn.current.addEventListener('click',()=>{
+    idx--
+    changeImage()
+    reset()
+  })
+  },[idx])
 
   return (
     <>
-        <div className="counter" ref={counter}>
-            <div className="nums">
-                <span className='in'>3</span>
-                <span>2</span>
-                <span>1</span>
-                <span>0</span>
+        <div className="carousel">
+            <div className="image-container" id="imgs" ref={img}>
+                <img src={"https://images.unsplash.com/photo-1586227740560-8cf2732c1531?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=961&q=80"} alt="" />
+                <img src={"https://images.unsplash.com/photo-1648737154448-ccf0cafae1c2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"} alt="" />
+                <img src={"https://images.unsplash.com/photo-1649821042125-699d75d0a893?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"} alt="" />
+                <img src={"https://images.unsplash.com/photo-1649821755622-d22da86de3b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"} alt="" />
+
             </div>
-            <h4>Get Ready</h4>
-        </div>
-        <div className="final" ref={finalMessage}>
-            <h1>Go</h1>
-            <button id="replay" ref={reply}>Replay</button>
-            
+            <div className="button-container">
+                <button id="left" className='btn' ref={leftbtn}>Prev</button>
+                <button id="right" className='btn' ref={rightbtn}>Next</button>
+            </div>
         </div>
     </>
   )
