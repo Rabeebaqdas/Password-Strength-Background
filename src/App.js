@@ -6,59 +6,38 @@ import React,{useRef,useEffect,useState} from 'react';
 
 function App() {
 
+    const password = useRef(null)
+    const background = useRef(null)
 
-useEffect(()=>{
-    const contents = document.querySelectorAll('.content')
-    const listItems = document.querySelectorAll('nav ul li')
-    
-    listItems.forEach((item, idx) => {
-        item.addEventListener('click', () => {
-            hideAllContens()
-            hideAllItems()
-    
-            item.classList.add('active')
-            contents[idx].classList.add('show')
+    useEffect(()=>{
+        password.current.addEventListener('input', (e) => {
+            const input = e.target.value
+            const length = input.length
+            const blurValue = 20 - length * 2
+            background.current.style.filter = `blur(${blurValue}px)`
         })
-    })
-    
-    function hideAllContens() {
-        contents.forEach(content => content.classList.remove('show'))
-    }
-    
-    function hideAllItems() {
-        listItems.forEach(item => item.classList.remove('active'))
-    }
-},[])
+    },[])
+
 
   return (
-    
-    <div className="phone">
-        <img src={"https://images.unsplash.com/photo-1649317739599-a326c2a5d8c7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=465&q=80"} alt="" className='content show'  />
-        <img src={"https://images.unsplash.com/photo-1650184466684-44b4a6cdb726?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"} alt="" className='content'  />
-        <img src={"https://images.unsplash.com/photo-1650170496638-b05030a94005?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"} alt="" className='content'  />
-        <img src={"https://images.unsplash.com/photo-1650204154100-983cc99567cc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"} alt="" className='content'  />
-        <nav>
-            <ul>
-                <li className='active'>
-                    <i className='fas fa-home'></i>
-                    <p>Home</p>
-                </li>
-                <li>
-                    <i className='fas fa-box'></i>
-                    <p>Work</p>
-                </li>
-                <li>
-                    <i className='fas fa-book-open'></i>
-                    <p>Blog</p>
-                </li>
-                <li>
-                    <i className='fas fa-users'></i>
-                    <p>About Us</p>
-                </li>
-            </ul>
-        </nav>
+    <>
+    <div class="background" id="background" ref={background}></div>
+    <div class="bg-white rounded p-10 text-center shadow-md">
+        <h1 class="text-3xl">Image Password Strength</h1>
+        <p class="text-sm text-gray-700">Change the password to see the effect</p>
+        <div class="my-4 text-left">
+            <label for="email" class="text-gray-900">Email:</label>
+            <input type="text" class="border block w-full p-2 mt-2 rounded" id="email" placeholder="Enter Email" />
+        </div>
+        <div class="my-4 text-left">
+            <label for="password" class="text-gray-900">Password:</label>
+            <input type="password" class="border block w-full p-2 mt-2 rounded" id="password" ref={password}
+                placeholder="Enter Password" />
+        </div>
 
+        <button class="bg-black text-white py-2 mt-4 inline-block w-full rounded" type="submit">Submit</button>
     </div>
+    </>
   )
 }
 
